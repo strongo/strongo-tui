@@ -10,6 +10,7 @@
 
 # IDEs
 .idea/
+.claude/settings.local.json
 
 # Test binary, built with `go test -c`
 *.test

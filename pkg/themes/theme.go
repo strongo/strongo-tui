@@ -3,44 +3,55 @@ package themes
 import (
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
-	"github.com/strongo/strongo-tui/pkg/colors"
 )
 
-// Theme defines the color scheme for terminal UI components
-type Theme struct {
-	FocusedBorderColor       tcell.Color
-	FocusedGraphicsColor     tcell.Color
-	FocusedSelectedTextStyle tcell.Style
+type Theme interface {
+	FocusedBorderColor() tcell.Color
+	FocusedGraphicsColor() tcell.Color
+	FocusedSelectedTextStyle() tcell.Style
 
-	BlurredBorderColor       tcell.Color
-	BlurredGraphicsColor     tcell.Color
-	BlurredSelectedTextStyle tcell.Style
+	BlurredBorderColor() tcell.Color
+	BlurredGraphicsColor() tcell.Color
+	BlurredSelectedTextStyle() tcell.Style
 
-	LabelColor tcell.Color
+	LabelColor() tcell.Color
 
-	TableHeaderColor tcell.Color
+	TableHeaderColor() tcell.Color
 
-	HotkeyColor tcell.Color
+	HotkeyColor() tcell.Color
 }
+
+var _ Theme = theme{}
+
+// theme defines the color scheme for terminal UI components
+type theme struct {
+	focusedBorderColor       tcell.Color
+	focusedGraphicsColor     tcell.Color
+	focusedSelectedTextStyle tcell.Style
+
+	blurredBorderColor       tcell.Color
+	blurredGraphicsColor     tcell.Color
+	blurredSelectedTextStyle tcell.Style
+
+	labelColor tcell.Color
+
+	tableHeaderColor tcell.Color
+
+	hotkeyColor tcell.Color
+}
+
+func (t theme) FocusedBorderColor() tcell.Color       { return t.focusedBorderColor }
+func (t theme) FocusedGraphicsColor() tcell.Color     { return t.focusedGraphicsColor }
+func (t theme) FocusedSelectedTextStyle() tcell.Style { return t.focusedSelectedTextStyle }
+func (t theme) BlurredBorderColor() tcell.Color       { return t.blurredBorderColor }
+func (t theme) BlurredGraphicsColor() tcell.Color     { return t.blurredGraphicsColor }
+func (t theme) BlurredSelectedTextStyle() tcell.Style { return t.blurredSelectedTextStyle }
+func (t theme) LabelColor() tcell.Color               { return t.labelColor }
+func (t theme) TableHeaderColor() tcell.Color         { return t.tableHeaderColor }
+func (t theme) HotkeyColor() tcell.Color              { return t.hotkeyColor }
 
 // CurrentTheme is the currently active theme
-var CurrentTheme = Theme{
-	FocusedBorderColor:   colors.DefaultFocusedBorderColor,
-	FocusedGraphicsColor: tcell.ColorWhite,
-	FocusedSelectedTextStyle: tcell.StyleDefault.
-		Background(tcell.ColorWhite).
-		Foreground(tcell.ColorBlack),
-
-	BlurredBorderColor:   colors.DefaultBlurBorderColor,
-	BlurredGraphicsColor: tcell.ColorGray,
-	BlurredSelectedTextStyle: tcell.StyleDefault.
-		Background(tcell.ColorGray).
-		Foreground(tcell.ColorWhite),
-
-	LabelColor:       colors.LabelColor,
-	TableHeaderColor: colors.TableHeaderColor,
-	HotkeyColor:      colors.HotkeyColor,
-}
+var CurrentTheme = defaultTheme()
 
 // DefaultBorderWithPadding applies default border styling with padding
 func DefaultBorderWithPadding(box *tview.Box) {
@@ -51,13 +62,13 @@ func DefaultBorderWithPadding(box *tview.Box) {
 // DefaultBorderWithoutPadding applies default border styling without padding
 func DefaultBorderWithoutPadding(box *tview.Box) {
 	box.SetBorder(true)
-	box.SetBorderColor(CurrentTheme.BlurredBorderColor)
+	box.SetBorderColor(CurrentTheme.BlurredBorderColor())
 	box.SetBorderAttributes(tcell.AttrDim)
 	box.SetFocusFunc(func() {
-		box.SetBorderColor(CurrentTheme.FocusedBorderColor)
+		box.SetBorderColor(CurrentTheme.FocusedBorderColor())
 	})
 	box.SetBlurFunc(func() {
-		box.SetBorderColor(CurrentTheme.BlurredBorderColor)
+		box.SetBorderColor(CurrentTheme.BlurredBorderColor())
 	})
 }
 

@@ -31,6 +31,5 @@ jobs:
     with:
       code_coverage: true
       min_test_coverage_percent: 100
-
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

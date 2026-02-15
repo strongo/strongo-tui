@@ -10,8 +10,35 @@ import (
 	"github.com/strongo/strongo-tui/pkg/themes"
 )
 
-func main() {
-	app := tview.NewApplication()
+var runApp = func(app *tview.Application) error {
+	return app.Run()
+}
+
+// createInputCapture returns the keyboard shortcut handler.
+func createInputCapture(app *tview.Application, statusText *tview.TextView) func(event *tcell.EventKey) *tcell.EventKey {
+	return func(event *tcell.EventKey) *tcell.EventKey {
+		switch event.Rune() {
+		case 'o', 'O':
+			statusText.SetText(colors.Success("✓ OK pressed (keyboard)!"))
+			return nil
+		case 'c', 'C':
+			statusText.SetText(colors.Danger("✗ Cancelled (keyboard)"))
+			return nil
+		case 'h', 'H':
+			statusText.SetText(colors.BlueText("ℹ Shortcuts: (o) OK, (c) Cancel, (h) Help, Ctrl+C to quit"))
+			return nil
+		case 'q', 'Q':
+			app.Stop()
+			return nil
+		}
+		return event
+	}
+}
+
+// createApp sets up the full tview application and returns it along with
+// the statusText view and buttons (needed for verifying handler behavior in tests).
+func createApp() (app *tview.Application, statusText *tview.TextView, okButton, cancelButton, helpButton *button.WithShortcut) {
+	app = tview.NewApplication()
 
 	// Create a text view with colored content
 	welcomeText := colors.Success("Welcome to strongo-tui!") + "\n\n" +
@@ -31,15 +58,15 @@ func main() {
 	themes.SetPanelTitle(textView.Box, " strongo-tui Demo ")
 
 	// Create status text
-	statusText := tview.NewTextView().
+	statusText = tview.NewTextView().
 		SetDynamicColors(true).
 		SetTextAlign(tview.AlignCenter).
 		SetText(colors.GrayText("Ready"))
 
 	// Create buttons with shortcuts
-	okButton := button.NewWithShortcut("OK", 'o')
-	cancelButton := button.NewWithShortcut("Cancel", 'c')
-	helpButton := button.NewWithShortcut("Help", 'h')
+	okButton = button.NewWithShortcut("OK", 'o')
+	cancelButton = button.NewWithShortcut("Cancel", 'c')
+	helpButton = button.NewWithShortcut("Help", 'h')
 
 	// Button handlers
 	okButton.SetSelectedFunc(func() {
@@ -70,26 +97,16 @@ func main() {
 		AddItem(statusText, 1, 0, false)
 
 	// Keyboard shortcuts
-	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		switch event.Rune() {
-		case 'o', 'O':
-			statusText.SetText(colors.Success("✓ OK pressed (keyboard)!"))
-			return nil
-		case 'c', 'C':
-			statusText.SetText(colors.Danger("✗ Cancelled (keyboard)"))
-			return nil
-		case 'h', 'H':
-			statusText.SetText(colors.BlueText("ℹ Shortcuts: (o) OK, (c) Cancel, (h) Help, Ctrl+C to quit"))
-			return nil
-		case 'q', 'Q':
-			app.Stop()
-			return nil
-		}
-		return event
-	})
+	app.SetInputCapture(createInputCapture(app, statusText))
 
-	// Run application
-	if err := app.SetRoot(flex, true).EnableMouse(true).Run(); err != nil {
+	app.SetRoot(flex, true).EnableMouse(true)
+
+	return app, statusText, okButton, cancelButton, helpButton
+}
+
+func main() {
+	app, _, _, _, _ := createApp()
+	if err := runApp(app); err != nil {
 		fmt.Printf("Error running application: %v\n", err)
 	}
 }

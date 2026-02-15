@@ -148,11 +148,15 @@ func TestMain_error(t *testing.T) {
 
 	main()
 
-	w.Close()
+	if err := w.Close(); err != nil {
+		t.Fatalf("failed to close pipe writer: %v", err)
+	}
 	os.Stdout = oldStdout
 
 	var buf bytes.Buffer
-	buf.ReadFrom(r)
+	if _, err := buf.ReadFrom(r); err != nil {
+		t.Fatalf("failed to read from pipe: %v", err)
+	}
 	output := buf.String()
 
 	expected := fmt.Sprintf("Error running application: %v\n", "test error")

@@ -1,5 +1,8 @@
 # strongo-tui
 
+[![Go CI](https://github.com/strongo/strongo-tui/actions/workflows/ci.yml/badge.svg)](https://github.com/strongo/strongo-tui/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/strongo/strongo-tui/badge.svg?branch=main)](https://coveralls.io/github/strongo/strongo-tui?branch=main)
+
 Reusable terminal UI components for building TUI applications with Go, powered by [tview](https://github.com/rivo/tview).
 
 ## Overview

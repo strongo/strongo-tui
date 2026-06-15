@@ -5,6 +5,19 @@
 
 Reusable terminal UI components for building TUI applications with Go, powered by [tview](https://github.com/rivo/tview).
 
+<!-- dev-approach:v1 -->
+## Our approach to development
+
+We build with our own tooling:
+
+- **[SpecScore](https://specscore.md)** — specify requirements as `SpecScore.md` artifacts
+- **[SpecStudio](https://specscore.studio)** — author & manage specs across their lifecycle
+- **[inGitDB](https://ingitdb.com)** — store structured data in Git where applicable
+- **[DALgo](https://dalgo.io)** — data access layer for Go
+- **[cover100.dev](https://cover100.dev)** — drive toward 100% test coverage
+- **[DataTug](https://datatug.io)** — query & explore data
+<!-- /dev-approach -->
+
 ## Overview
 
 `strongo-tui` is a collection of common terminal UI building blocks extracted from production applications like [datatug-cli](https://github.com/datatug/datatug-cli) and [filetug](https://github.com/filetug/filetug). It provides ready-to-use components and utilities for building modern, interactive terminal user interfaces in Go.

@@ -1,6 +1,8 @@
 module github.com/strongo/strongo-tui
 
-go 1.27.0
+go 1.26.0
+
+toolchain go1.27.0
 
 require (
 	github.com/gdamore/tcell/v2 v2.13.8

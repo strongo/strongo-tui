@@ -49,7 +49,7 @@ the legacy root module, tview, or tcell. It owns presentation tokens only;
 layout, focus management, and application state stay in the consuming app.
 
 ```bash
-go get github.com/strongo/strongo-tui/charm
+go get github.com/strongo/strongo-tui/charm@v0.1.0
 ```
 
 ```go
@@ -63,6 +63,10 @@ panel := theme.FocusedPanel().Render(title + "\n" + row)
 
 `DefaultTheme` returns an immutable value. To customize colours, copy
 `DefaultPalette`, adjust its fields, and pass it to `NewTheme`.
+
+Charm releases use scoped Git tags such as `charm/v0.1.0`, which consumers
+request as `@v0.1.0`. The `charm/v*` tag pattern triggers this repository's CI
+for a release commit.
 
 ### Colors
 

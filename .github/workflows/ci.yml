@@ -10,6 +10,7 @@ on:
       - 'v[0-9]+\.[0-9]+\.[0-9]+' # Push events to matching v*, i.e. v20.15.10
     paths:
       - '.github/workflows/**.yml'
+      - 'charm/**'
       - 'pkg/**'
       - 'examples/**'
       - 'go.*'
@@ -19,6 +20,7 @@ on:
       - '**'
     paths:
       - '.github/workflows/**.yml'
+      - 'charm/**'
       - 'pkg/**'
       - 'examples/**'
       - 'go.*'
@@ -26,12 +28,24 @@ on:
 
 jobs:
 
-  strongo_workflow:
+  root_module:
     permissions:
       contents: write
     uses: strongo/cicd/.github/workflows/workflow.yml@main
     with:
       code_coverage: true
       min_test_coverage_percent: 100
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  charm_module:
+    permissions:
+      contents: write
+    uses: strongo/cicd/.github/workflows/workflow.yml@main
+    with:
+      code_coverage: true
+      min_test_coverage_percent: 100
+      working_directory: charm
+      disable-version-bumping: true
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

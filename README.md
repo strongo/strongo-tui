@@ -5,6 +5,10 @@
 
 Reusable terminal UI components for building TUI applications with Go, powered by [tview](https://github.com/rivo/tview).
 
+The repository also publishes a dependency-clean Charm module for applications
+that use [Lip Gloss](https://github.com/charmbracelet/lipgloss) rather than
+tview: `github.com/strongo/strongo-tui/charm`.
+
 <!-- dev-approach:v1 -->
 ## Our approach to development
 
@@ -37,6 +41,28 @@ go get github.com/strongo/strongo-tui
 ```
 
 ## Components
+
+### Charm theme module
+
+The nested `charm` module supplies semantic Lip Gloss styles without importing
+the legacy root module, tview, or tcell. It owns presentation tokens only;
+layout, focus management, and application state stay in the consuming app.
+
+```bash
+go get github.com/strongo/strongo-tui/charm
+```
+
+```go
+import charm "github.com/strongo/strongo-tui/charm"
+
+theme := charm.DefaultTheme()
+title := theme.Title().Render("Files")
+row := theme.SelectedRow().Render("README.md")
+panel := theme.FocusedPanel().Render(title + "\n" + row)
+```
+
+`DefaultTheme` returns an immutable value. To customize colours, copy
+`DefaultPalette`, adjust its fields, and pass it to `NewTheme`.
 
 ### Colors
 

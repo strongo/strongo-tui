@@ -1,166 +1,174 @@
 package main
 
 import (
-	"bytes"
 	"errors"
-	"fmt"
-	"os"
 	"strings"
 	"testing"
 
-	"github.com/gdamore/tcell/v2"
-	"github.com/rivo/tview"
+	tea "charm.land/bubbletea/v2"
+	"github.com/strongo/strongo-tui/pkg/nav"
+	"github.com/strongo/strongo-tui/pkg/nav/navtest"
+	"github.com/strongo/strongo-tui/pkg/uitest"
+	"github.com/strongo/strongo-tui/pkg/widgets"
 )
 
-func TestCreateApp(t *testing.T) {
-	app, statusText, okBtn, cancelBtn, helpBtn := createApp()
-	if app == nil {
-		t.Fatal("expected app to be non-nil")
-	}
-	if statusText == nil {
-		t.Fatal("expected statusText to be non-nil")
-	}
-	if okBtn == nil {
-		t.Fatal("expected okButton to be non-nil")
-	}
-	if cancelBtn == nil {
-		t.Fatal("expected cancelButton to be non-nil")
-	}
-	if helpBtn == nil {
-		t.Fatal("expected helpButton to be non-nil")
+func newHarness(t *testing.T) *navtest.Harness {
+	t.Helper()
+	return navtest.New(t, nav.Page{
+		Title:   "Demo",
+		Menu:    newMenu(),
+		Content: nav.Static("Welcome", "Pick a screen from the menu."),
+		Focus:   nav.FocusToMenu,
+	})
+}
+
+func TestMenuOpensPeopleAndLoadsThemAsynchronously(t *testing.T) {
+	h := newHarness(t)
+	h.RequireContains("Screens")
+	h.RequireContains("Pick a screen")
+
+	h.Press("enter") // People is highlighted first
+	h.RequireContains("Demo > People")
+	h.RequireContains("Person 1")
+	h.RequireContains("Person 2")
+	if h.Model().Depth() != 2 {
+		t.Fatal("People is a page on the stack")
 	}
 }
 
-func TestCreateInputCapture(t *testing.T) {
-	app := tview.NewApplication()
-	statusText := tview.NewTextView()
-
-	handler := createInputCapture(app, statusText)
-
-	tests := []struct {
-		name       string
-		rune       rune
-		wantNil    bool
-		wantText   string
-		wantStop   bool
-	}{
-		{"lowercase o", 'o', true, "OK", false},
-		{"uppercase O", 'O', true, "OK", false},
-		{"lowercase c", 'c', true, "Cancelled", false},
-		{"uppercase C", 'C', true, "Cancelled", false},
-		{"lowercase h", 'h', true, "Shortcuts", false},
-		{"uppercase H", 'H', true, "Shortcuts", false},
-		{"lowercase q", 'q', true, "", true},
-		{"uppercase Q", 'Q', true, "", true},
-		{"other key x", 'x', false, "", false},
+func TestPeopleGridDrillsDownIntoARow(t *testing.T) {
+	h := newHarness(t)
+	h.Press("enter")
+	h.Press("down", "down", "enter")
+	h.RequireContains("Demo > People > Person 3")
+	h.RequireContains("name: Person 3")
+	h.Press("up")
+	if h.Model().Zone() != nav.FocusToBreadcrumbs {
+		t.Fatal("the pane is at its top: Up goes to the breadcrumbs")
 	}
+	h.Press("enter") // the parent crumb, People
+	h.RequireNotContains("Demo > People > Person 3")
+	h.RequireContains("Demo > People")
+}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			statusText.SetText("")
-			event := tcell.NewEventKey(tcell.KeyRune, tt.rune, tcell.ModNone)
-			result := handler(event)
+func TestShortcutsOpenScreens(t *testing.T) {
+	h := newHarness(t)
+	h.Press("t")
+	h.RequireContains("alpha")
+	h.RequireNotContains("Demo > People")
 
-			if tt.wantNil {
-				if result != nil {
-					t.Errorf("expected nil return for rune %c, got non-nil", tt.rune)
-				}
-			} else {
-				if result == nil {
-					t.Errorf("expected non-nil return for rune %c, got nil", tt.rune)
-				} else if result != event {
-					t.Errorf("expected same event returned for rune %c", tt.rune)
-				}
-			}
+	h.Press("left", "left") // the first Left collapses alpha, the second leaves the tree
+	h.Press("x")
+	h.RequireContains("visibility: public")
+	h.RequireContains("Demo > Tree > Text")
+}
 
-			if tt.wantText != "" {
-				text := statusText.GetText(true)
-				if !strings.Contains(text, tt.wantText) {
-					t.Errorf("expected statusText to contain %q, got %q", tt.wantText, text)
-				}
-			}
-		})
+func TestTreeSelectionShowsAnAlert(t *testing.T) {
+	h := newHarness(t)
+	h.Press("t")
+	h.Press("enter")
+	h.RequireContains("Opening alpha")
+	h.Press("enter")
+	h.RequireNotContains("Opening alpha")
+	h.Press("down", "down", "enter") // beta, then an unselectable group cannot be reached
+	h.RequireContains("Opening beta")
+}
+
+func TestFormValidatesAndCancels(t *testing.T) {
+	h := newHarness(t)
+	h.Press("f")
+	h.RequireContains("Title")
+	h.Press("tab", "tab", "tab", "enter") // Create with no title
+	h.RequireContains("Please type a title first")
+	h.Press("enter")
+	h.Press("shift+tab", "shift+tab", "shift+tab")
+	h.Type("Acme")
+	h.Press("tab", "tab", "tab", "enter")
+	h.RequireContains("Project Acme created")
+	h.Press("esc")
+	h.Press("tab", "enter") // Cancel
+	if h.Model().Depth() != 1 {
+		t.Fatal("Cancel pops the form page")
 	}
 }
 
-func TestButtonHandlers(t *testing.T) {
-	_, statusText, okBtn, cancelBtn, helpBtn := createApp()
-
-	tests := []struct {
-		name     string
-		btn      tview.Primitive
-		wantText string
-	}{
-		{"OK button", okBtn, "OK pressed"},
-		{"Cancel button", cancelBtn, "Cancelled"},
-		{"Help button", helpBtn, "shortcuts"},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			statusText.SetText("")
-			// Trigger the button's selected func via its InputHandler with Enter key
-			handler := tt.btn.InputHandler()
-			handler(tcell.NewEventKey(tcell.KeyEnter, 0, tcell.ModNone), func(p tview.Primitive) {})
-
-			text := statusText.GetText(true)
-			if !strings.Contains(text, tt.wantText) {
-				t.Errorf("expected statusText to contain %q, got %q", tt.wantText, text)
-			}
-		})
+func TestQuitFromAnywhere(t *testing.T) {
+	h := newHarness(t)
+	h.Press("ctrl+q")
+	if !h.Quit() {
+		t.Fatal("Ctrl+Q quits")
 	}
 }
 
-func TestRunAppDefault(t *testing.T) {
-	app := tview.NewApplication()
-	// The default runApp calls app.Run() which will fail without a terminal,
-	// but this exercises the default function body for coverage.
-	err := runApp(app)
-	if err == nil {
-		t.Log("runApp returned nil (unexpected in test env, but acceptable)")
-	}
-}
+func TestMainRunsTheApp(t *testing.T) {
+	previousRun, previousExit := run, exit
+	t.Cleanup(func() { run, exit = previousRun, previousExit })
 
-func TestMain_success(t *testing.T) {
-	original := runApp
-	defer func() { runApp = original }()
-
-	runApp = func(app *tview.Application) error {
-		return nil
-	}
-
-	// main() should not panic
+	var ran bool
+	run = func(nav.Model, ...tea.ProgramOption) error { ran = true; return nil }
+	exit = func(int) { t.Fatal("must not exit on success") }
 	main()
+	if !ran {
+		t.Fatal("main must run the app")
+	}
+
+	code := -1
+	run = func(nav.Model, ...tea.ProgramOption) error { return errors.New("boom") }
+	exit = func(c int) { code = c }
+	main()
+	if code != 1 {
+		t.Fatalf("exit code = %d", code)
+	}
 }
 
-func TestMain_error(t *testing.T) {
-	original := runApp
-	defer func() { runApp = original }()
-
-	runApp = func(app *tview.Application) error {
-		return errors.New("test error")
+func TestPeopleScreenBeforeTheLoadCompletes(t *testing.T) {
+	var s nav.Screen = newPeople()
+	s, _ = s.Update(tea.WindowSizeMsg{Width: 40, Height: 5})
+	s, _ = s.Update(nav.ScreenFocusMsg{Focused: true})
+	if got := s.View(); !strings.Contains(got, "Loading people") {
+		t.Fatalf("view = %q", got)
 	}
-
-	// Capture stdout to verify error message
-	oldStdout := os.Stdout
-	r, w, _ := os.Pipe()
-	os.Stdout = w
-
-	main()
-
-	if err := w.Close(); err != nil {
-		t.Fatalf("failed to close pipe writer: %v", err)
+	if _, cmd := s.Update(uitest.Key("down")); cmd != nil {
+		t.Fatal("keys are ignored until the grid exists")
 	}
-	os.Stdout = oldStdout
-
-	var buf bytes.Buffer
-	if _, err := buf.ReadFrom(r); err != nil {
-		t.Fatalf("failed to read from pipe: %v", err)
+	if !s.(people).AtEdge(widgets.Up) || s.(people).Editing() {
+		t.Fatal("no grid: at every edge, not editing")
 	}
-	output := buf.String()
+	s, _ = s.Update(loadPeople()())
+	if got := s.View(); strings.Contains(got, "Loading") || !strings.Contains(got, "Person 1") {
+		t.Fatalf("after the load: %q", got)
+	}
+}
 
-	expected := fmt.Sprintf("Error running application: %v\n", "test error")
-	if output != expected {
-		t.Errorf("expected output %q, got %q", expected, output)
+func TestTreeLeafSelectionDoesNothing(t *testing.T) {
+	h := newHarness(t)
+	h.Press("t")
+	h.Press("down", "enter") // alpha/readme.md has no Ref
+	h.RequireNotContains("Opening")
+}
+
+func TestLeavingTheFormBlursIt(t *testing.T) {
+	h := newHarness(t)
+	h.Press("f")
+	h.Press("f1") // application keys step aside while the form edits text: F1 is text-safe here
+	h.Press("up")
+	if h.Model().Zone() != nav.FocusToBreadcrumbs {
+		t.Fatal("Up from the first field leaves the form")
+	}
+	h.Press("down")
+	h.RequireContains("Title")
+}
+
+func TestPeopleEditingWhileFilterIsOpen(t *testing.T) {
+	h := newHarness(t)
+	h.Press("enter")
+	h.Press("f1")
+}
+
+func TestUpFromTheMenuReachesTheBreadcrumbs(t *testing.T) {
+	h := newHarness(t)
+	h.Press("up")
+	if h.Model().Zone() != nav.FocusToBreadcrumbs {
+		t.Fatal("the first item is at the top edge")
 	}
 }

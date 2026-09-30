@@ -25,6 +25,7 @@ heard of an LLM, it is tuigoff.
 |---|---|---|
 | [Card](card.md) | A filled, role-coloured block that holds one unit of content | defined |
 | [Card with ears](card-with-ears.md) | A card with a small header tab (the "ear") on its top edge | defined |
+| [Markdown](markdown.md) | Themed Markdown text for a card body | defined |
 
 ## Conversation
 

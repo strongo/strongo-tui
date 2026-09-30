@@ -17,18 +17,41 @@ was drawn for DataTug, so treat its product names as examples; the rules below a
    ready/success.
 4. **Dense, not cramped.** One-cell gaps and padding. Tables may be dense; controls need room.
 
-## Palette (roles)
+## Themes: light and dark
 
-| Role | Hex |
+Light and dark are both first-class. The theme is detected from the terminal's real background
+(the terminal is asked for it once at start-up), falling back to dark when it does not answer, and
+an app may override it with `theme.SetDark`. Every colour below is read at draw time, so a change
+takes effect on the next frame.
+
+Surfaces are not fixed hex values. A card's fill is the terminal's actual background blended 20% of
+the way toward the role's hue, so it reads as "that role, tinted onto this terminal" on a plain dark
+grey, a bright white or a hued theme such as Solarized. Text on it is whichever of a near-white or a
+near-black has the higher contrast.
+
+| Token (`pkg/theme`) | Dark | Light |
+|---|---|---|
+| Focus / selection, `FocusColor` | `#6FB1FF` | `#1A5FC7` |
+| Text on a focused surface | `#0B1220` | `#FFFFFF` |
+| Muted text and unfocused borders, `MutedColor` | `#A3A8B1` | `#54544C` |
+| Accent for keys and shortcuts, `AccentColor` | `#E8C25A` | `#734B00` |
+| Error text, `ErrorColor` | `#FF6B6B` | `#B3261E` |
+| Top / status bar background | `#2E3440` | `#D8DCE6` |
+| Top / status bar text | `#ECEFF4` | `#101820` |
+
+Role hues, the same in both themes (they only tint the card fill):
+
+| Role | Hue |
 |---|---|
-| Main canvas | `#080D12` |
-| Side surface | `#101820` |
-| Raised / card | `#16212B` |
-| Faint border | `#293A48` |
-| Focus | `#20A4FF` |
-| Attention | `#E9C34B` |
-| Ready | `#3BD17F` |
-| Text / dim text | `#D9E2EA` / `#8FA0AE` |
+| user | `#4A7FB5` |
+| assistant | `#9A9488` |
+| system | `#C7A934` |
+| error | `#B5544A` |
+| block | `#8B93A8` |
+
+The [reference screen](design-language.html) was drawn in dark only, with its own sample colours
+(canvas `#080D12`, focus `#20A4FF`, ready `#3BD17F`); treat those as illustration and the tables
+above as the tokens.
 
 ## Layout and borders
 

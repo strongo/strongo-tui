@@ -32,8 +32,8 @@ A [card with an ear](card-with-ears.md), role `user`, ear label **You** and the 
 
 ## Themes
 
-The `user` fill is a tinted neutral in both themes, quieter than the assistant's so the answer
-carries the weight.
+The `user` fill is the terminal background tinted toward a soft blue (`#4A7FB5`), in light and dark
+alike, so it stays quieter than the focus colour and reads clearly against the assistant's warm grey.
 
 ## Rules
 

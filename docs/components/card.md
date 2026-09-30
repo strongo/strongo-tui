@@ -15,7 +15,8 @@ message and block in a Sneat CLIs app renders through this component, so they al
 ▌ Body line two, can hold a grid, markdown or any nested content
 ```
 
-- **Fill:** a solid background colour chosen by the card's role. There is no border.
+- **Fill:** a solid background: the terminal's own background tinted toward the card's role hue.
+  There is no border.
 - **Marker column:** a narrow strip on the left. It is where focus and selection show.
 - **Padding:** the same one-cell padding on the left and right for every card, so text in all cards
   starts in the same column, and the top bar aligns with it.
@@ -36,8 +37,10 @@ card changes. `block` is for rich content such as a data grid that sits in the s
 
 ## Themes
 
-The fill, text and focus colours each have a light and a dark value and follow the app's theme.
-Contrast between fill and text is checked, not eyeballed.
+Works in light and dark. The fill is derived from the real terminal background (a 20% blend toward
+the role hue), and the text colour is chosen for contrast against that fill, so a card stays legible
+on any terminal theme. Focus uses the theme's focus colour with its own contrast text. Token values
+are in the [design language](../design-language.md#themes-light-and-dark).
 
 ## Rules
 

@@ -39,8 +39,8 @@ width.
 
 ## Themes
 
-The `assistant` fill sits between the canvas and the focus colour in both themes and keeps its text
-contrast above the accessibility floor.
+The `assistant` fill is the terminal background tinted toward a warm grey (`#9A9488`), in light and
+dark alike, with text picked for contrast. Focus swaps in the theme's focus colour.
 
 ## Rules
 

@@ -203,9 +203,9 @@ func TestListEnterAndShortcutsSelect(t *testing.T) {
 	if cmd != nil && len(uitest.Msgs(cmd)) != 0 {
 		t.Fatal("unknown letters do nothing")
 	}
-	l, cmd = l.Update(uitest.Key("ctrl+g"))
-	l, cmd = l.Update(uitest.Key("up"))
-	l, cmd = l.Update(tea.KeyPressMsg(tea.Key{Code: 'a', Text: "ab"}))
+	l, _ = l.Update(uitest.Key("ctrl+g"))
+	l, _ = l.Update(uitest.Key("up"))
+	l, _ = l.Update(tea.KeyPressMsg(tea.Key{Code: 'a', Text: "ab"}))
 	if l.Index() != 1 {
 		t.Fatal("multi-rune text is not a shortcut")
 	}

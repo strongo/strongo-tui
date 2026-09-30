@@ -224,7 +224,7 @@ func TestTreeEnterAndSpace(t *testing.T) {
 		t.Fatal("space only toggles")
 	}
 	tr, _ = treePress(tr, "end")
-	tr, msgs = treePress(tr, "enter", "space")
+	_, msgs = treePress(tr, "enter", "space")
 	if len(msgs) != 1 {
 		t.Fatal("leaf: enter selects, space is silent")
 	}

@@ -735,12 +735,12 @@ func TestQuitCommand(t *testing.T) {
 func TestMouseFocusAndCoordinates(t *testing.T) {
 	f := newFixture(t)
 	f.h.Click(60, 10)
-	m, c := f.current()
+	_, c := f.current()
 	if f.h.Model().Zone() != nav.FocusToContent || len(c.mouse) != 1 || c.mouse[0] != [2]int{29, 8} {
 		t.Fatalf("content click: zone=%v mouse=%v", f.h.Model().Zone(), c.mouse)
 	}
 	f.h.Click(5, 3)
-	m, _ = f.current()
+	m, _ := f.current()
 	if f.h.Model().Zone() != nav.FocusToMenu || len(m.mouse) != 1 || m.mouse[0] != [2]int{4, 1} {
 		t.Fatalf("menu click: zone=%v mouse=%v", f.h.Model().Zone(), m.mouse)
 	}

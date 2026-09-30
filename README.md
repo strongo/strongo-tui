@@ -2,7 +2,7 @@
 
 **Meet Mr. Tuigoff: the TUI Go Friendly Framework.**
 Terminal UIs in Go that feel good to use.
-*The house style behind DataTug, SpecScore, inGitDB, CodeGrapher, OVDB and Sneat.*
+*The house style behind DataTug, SpecScore, inGitDB, CodeGrapher, OVDB and Sneat CLIs.*
 
 > The name: **TUI** + **Go** + the Russian "-off" surname ending, as in Smirnoff. Mr. Tuigoff is a
 > gentleman who keeps your terminal tidy.
@@ -13,7 +13,7 @@ reference is [docs/design-language.html](docs/design-language.html).
 [![Go CI](https://github.com/tuigoff/tuigoff/actions/workflows/ci.yml/badge.svg)](https://github.com/tuigoff/tuigoff/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/tuigoff/tuigoff/badge.svg?branch=main)](https://coveralls.io/github/tuigoff/tuigoff?branch=main)
 
-The shared terminal UI toolkit of Sneat, DataTug and FileTug, built on
+The shared terminal UI toolkit of Sneat Co., DataTug and FileTug, built on
 [Bubble Tea v2](https://charm.land/bubbletea), [Bubbles](https://charm.land/bubbles)
 and [Lip Gloss](https://charm.land/lipgloss), in the Elm architecture those
 libraries are made for. It provides:

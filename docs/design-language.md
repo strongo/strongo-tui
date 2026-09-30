@@ -1,7 +1,7 @@
 # Tuigoff TUI design language
 
-Shared by every Sneat-ecosystem terminal app: DataTug, SpecScore, inGitDB, CodeGrapher, OVDB and the
-Sneat CLI. Dense and data-first, but calm enough for long sessions. The terminal is a canvas:
+Shared by every Sneat Co. terminal app: DataTug, SpecScore, inGitDB, CodeGrapher, OVDB and the
+Sneat Co. CLIs. Dense and data-first, but calm enough for long sessions. The terminal is a canvas:
 background changes define regions, borders define structure, and bright colour is reserved for state
 and focus.
 

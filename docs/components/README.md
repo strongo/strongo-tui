@@ -33,6 +33,14 @@ heard of an LLM, it is tuigoff.
 |---|---|---|
 | [User message](user-message.md) | The person's turn: a card with a "You" ear | defined |
 | [Agent message](agent-message.md) | The assistant's turn: a card with the product's name in the ear | defined |
+| [Transcript](transcript.md) | The scrolling, focusable history of cards and blocks | defined |
+| [Grid block](grid-block.md) | A data grid as a transcript entry | defined |
+
+## Panels
+
+| Component | What it is | Status |
+|---|---|---|
+| [Sidebar](sidebar.md) | A side panel of pinned entities with open and remove | defined |
 
 ## Next up (planned)
 

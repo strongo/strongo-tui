@@ -213,9 +213,24 @@ func (m *Model) leaveHeader() tea.Cmd {
 	return m.syncFocus()
 }
 
-// crumbSelected handles the activation of a breadcrumb.
+// crumbSelected handles the activation of a breadcrumb. While a custom trail
+// set with SetBreadcrumbs is shown, the message is also delivered to the menu
+// and the content of the current page, so an application whose trail is not the
+// page stack (a file browser's path) can react to any crumb.
 func (m *Model) crumbSelected(msg widgets.CrumbSelectedMsg) tea.Cmd {
-	if msg.ID != crumbsID || msg.Index >= len(m.pages) {
+	if msg.ID != crumbsID {
+		return nil
+	}
+	stack := m.stackCrumb(msg)
+	if m.crumbsOverride == nil {
+		return stack
+	}
+	return tea.Batch(stack, m.forward(msg))
+}
+
+// stackCrumb navigates the page stack for an activated breadcrumb.
+func (m *Model) stackCrumb(msg widgets.CrumbSelectedMsg) tea.Cmd {
+	if msg.Index >= len(m.pages) {
 		return nil
 	}
 	page := m.pages[msg.Index]

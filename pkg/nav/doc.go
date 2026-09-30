@@ -55,7 +55,8 @@
 //
 //	Push, Pop, PopTo, Replace, Reset   the stack
 //	SetPanels                          the screens of the current page
-//	SetBreadcrumbs                     the trail, for flows outside the stack
+//	SetBreadcrumbs                     the trail, for flows outside the stack; its
+//	                                   widgets.CrumbSelectedMsg also reaches the screens
 //	SetFocus                           the focus zone
 //	Alert, ShowError                   modals and error content
 //	SetActions                         the application's actions

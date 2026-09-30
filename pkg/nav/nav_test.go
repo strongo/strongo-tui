@@ -940,3 +940,26 @@ func TestResetKeepsAnInheritedMenuWithoutInitialisingItAgain(t *testing.T) {
 		t.Fatal("the menu is kept")
 	}
 }
+
+func TestCustomBreadcrumbSelectionReachesTheScreens(t *testing.T) {
+	f := newFixture(t)
+	f.h.Send(nav.SetBreadcrumbs(widgets.Crumb{Title: "Alpha"}, widgets.Crumb{Title: "Beta"})())
+	f.h.Send(widgets.CrumbSelectedMsg{ID: "nav.crumbs", Index: 1})
+	m, c := f.current()
+	want := widgets.CrumbSelectedMsg{ID: "nav.crumbs", Index: 1}
+	if got := m.msgs[len(m.msgs)-1]; got != want {
+		t.Fatalf("the menu did not receive the crumb selection: %v", got)
+	}
+	if got := c.msgs[len(c.msgs)-1]; got != want {
+		t.Fatalf("the content did not receive the crumb selection: %v", got)
+	}
+	if f.h.Model().Depth() != 1 {
+		t.Fatal("a crumb beyond the stack does not change it")
+	}
+
+	before := len(m.msgs)
+	f.h.Send(widgets.CrumbSelectedMsg{ID: "someone.else", Index: 1})
+	if m, _ = f.current(); len(m.msgs) != before {
+		t.Fatal("a foreign crumb selection is ignored")
+	}
+}

@@ -260,6 +260,20 @@ func SetHalfBlockEdges(v bool) { HalfBlockEdges = v }
 // detectBackground is.
 var detectColorProfile = func() colorprofile.Profile { return colorprofile.Env(os.Environ()) }
 
+// SetColorProfileDetector replaces colour-profile detection and returns a
+// restore function. colorprofile.Env reports NoTTY when stdout is not a
+// terminal, so COLORTERM=truecolor alone does not activate half-block edges
+// under go test. Pass nil to restore detection from the process environment.
+func SetColorProfileDetector(detect func() colorprofile.Profile) (restore func()) {
+	prev := detectColorProfile
+	if detect == nil {
+		detectColorProfile = func() colorprofile.Profile { return colorprofile.Env(os.Environ()) }
+	} else {
+		detectColorProfile = detect
+	}
+	return func() { detectColorProfile = prev }
+}
+
 // colorProfileSupportsTrueColor reports whether the detected colour
 // profile is exactly TrueColor -- half-block edges need the fg/bg pair to
 // render as their EXACT configured colours (a downsampled ANSI256/ANSI

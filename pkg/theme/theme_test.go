@@ -42,6 +42,17 @@ func withHalfBlockEdges(t *testing.T, trueColor bool, fn func()) {
 	fn()
 }
 
+func TestSetColorProfileDetector(t *testing.T) {
+	restore := SetColorProfileDetector(func() colorprofile.Profile { return colorprofile.TrueColor })
+	if !HalfBlockEdgesActive() && HalfBlockEdges {
+		t.Fatal("detector should force TrueColor")
+	}
+	restore()
+	restore = SetColorProfileDetector(nil)
+	_ = HalfBlockEdgesActive()
+	restore()
+}
+
 func TestDetectNeverPanics(t *testing.T) {
 	// os.Stdin/os.Stdout are almost certainly not a real terminal under `go
 	// test`; Detect must still return a bool, not panic.

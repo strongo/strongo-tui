@@ -1,4 +1,4 @@
-// Package theme is the shared visual language of the Sneat, DataTug and FileTug
+// Package theme is the shared visual language of Sneat Co., DataTug and FileTug
 // terminal applications: colours, card framing, and chrome (bars, composer
 // frame, panel rows) that every product renders through, so all of them look
 // and behave alike with no styling code of their own. The chat surface of

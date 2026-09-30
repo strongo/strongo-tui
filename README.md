@@ -3,11 +3,22 @@
 [![Go CI](https://github.com/strongo/strongo-tui/actions/workflows/ci.yml/badge.svg)](https://github.com/strongo/strongo-tui/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/strongo/strongo-tui/badge.svg?branch=main)](https://coveralls.io/github/strongo/strongo-tui?branch=main)
 
-Reusable terminal UI components for building TUI applications with Go, powered by [tview](https://github.com/rivo/tview).
+The shared terminal UI toolkit of Sneat, DataTug and FileTug, built on
+[Bubble Tea v2](https://charm.land/bubbletea), [Bubbles](https://charm.land/bubbles)
+and [Lip Gloss](https://charm.land/lipgloss), in the Elm architecture those
+libraries are made for. It provides:
 
-The repository also publishes a dependency-clean Charm module for applications
-that use [Lip Gloss](https://github.com/charmbracelet/lipgloss) rather than
-tview: `github.com/strongo/strongo-tui/charm`.
+- a **navigation shell** (`pkg/nav`): header with breadcrumbs, menu and content
+  panels, actions bar, alerts, focus zones, a stack of pages driven by messages;
+- **components** (`pkg/widgets`): list, tree, form, tabs, text pane, modal,
+  breadcrumbs, frame, layout helpers, all following the conventions of
+  `charm.land/bubbles`;
+- the **result grid** (`pkg/grid`): a sortable, filterable, virtualised table on
+  top of bubble-table, with per-cell styles, fixed columns, master/detail
+  messages and lazy row sources;
+- the shared **theme** (`pkg/theme`), **focus ring** (`pkg/focus`), **syntax
+  highlighting** (`pkg/highlight`) and the **test helpers** (`pkg/uitest`,
+  `pkg/nav/navtest`).
 
 <!-- dev-approach:v1 -->
 ## Our approach to development
@@ -22,259 +33,174 @@ We build with our own tooling:
 - **[DataTug](https://datatug.io)** — query & explore data
 <!-- /dev-approach -->
 
-## Overview
-
-`strongo-tui` is a collection of common terminal UI building blocks extracted from production applications like [datatug-cli](https://github.com/datatug/datatug-cli) and [filetug](https://github.com/filetug/filetug). It provides ready-to-use components and utilities for building modern, interactive terminal user interfaces in Go.
-
-## Features
-
-- **Colors & Theming**: ANSI color helpers and tcell-based theme support
-- **Reusable Components**: Buttons, boxes, padding utilities
-- **Consistent Styling**: Default border styles with focus/blur states
-- **Type-safe**: Uses Go generics for flexible component wrapping
-- **Well-tested**: Comprehensive test coverage
-
 ## Installation
 
 ```bash
 go get github.com/strongo/strongo-tui
 ```
 
-## Components
+## The architecture in five rules
 
-### Charm theme module
+1. **A component is a model.** `Update(tea.Msg) (T, tea.Cmd)` and `View() string`;
+   state lives in the value; setters have pointer receivers; the parent gives it
+   a size with `SetSize` or a `tea.WindowSizeMsg`. No component holds a pointer to
+   its parent or starts a goroutine.
+2. **Behaviour is a message.** A list does not call you back; it returns a
+   command that delivers `widgets.ItemSelectedMsg{ID, Index, Item}`, and your
+   `Update` handles it. Every message carries the component's ID, so a screen with
+   two lists can tell them apart.
+3. **Asynchronous work is a command.** A load is a `tea.Cmd` that returns a
+   result message. Nothing calls `Send`, nothing mutates the UI from a goroutine.
+4. **Navigation is a message.** A screen returns `nav.Push(page)`,
+   `nav.Pop()`, `nav.Alert(...)`; the shell owns the stack, the breadcrumbs, the
+   focus and the layout.
+5. **Keys are bindings.** `key.Binding` and `key.Matches`, collected in a `KeyMap`
+   that implements `help.KeyMap`, so keys can be rebound and shown in the actions
+   bar.
 
-The nested `charm` module supplies semantic Lip Gloss styles without importing
-the legacy root module, tview, or tcell. It owns presentation tokens only;
-layout, focus management, and application state stay in the consuming app.
-
-```bash
-go get github.com/strongo/strongo-tui/charm@v0.1.0
-```
-
-```go
-import charm "github.com/strongo/strongo-tui/charm"
-
-theme := charm.DefaultTheme()
-title := theme.Title().Render("Files")
-row := theme.SelectedRow().Render("README.md")
-panel := theme.FocusedPanel().Render(title + "\n" + row)
-```
-
-`DefaultTheme` returns an immutable value. To customize colours, copy
-`DefaultPalette`, adjust its fields, and pass it to `NewTheme`.
-
-Charm releases use scoped Git tags such as `charm/v0.1.0`, which consumers
-request as `@v0.1.0`. The `charm/v*` tag pattern triggers this repository's CI
-for a release commit.
-
-### Colors
-
-The `colors` package provides both ANSI escape codes for terminal output and tcell colors for tview components.
-
-#### ANSI Colors
+## A screen
 
 ```go
-import "github.com/strongo/strongo-tui/pkg/colors"
-
-// Basic colors
-fmt.Println(colors.RedText("Error message"))
-fmt.Println(colors.GreenText("Success!"))
-fmt.Println(colors.YellowText("Warning"))
-fmt.Println(colors.BlueText("Info"))
-fmt.Println(colors.GrayText("Debug"))
-
-// Semantic colors
-fmt.Println(colors.Danger("Critical error"))
-fmt.Println(colors.Warning("Be careful"))
-fmt.Println(colors.Success("Operation completed"))
-```
-
-#### TCell Colors
-
-```go
-import "github.com/strongo/strongo-tui/pkg/colors"
-
-// Pre-defined colors for UI components
-box.SetBorderColor(colors.DefaultFocusedBorderColor)
-table.SetColumnColor(colors.TableColumnTitle)
-```
-
-### Themes
-
-The `themes` package provides consistent theming for terminal UI components.
-
-```go
-import (
-    "github.com/strongo/strongo-tui/pkg/themes"
-    "github.com/rivo/tview"
-)
-
-// Apply default border with padding
-box := tview.NewBox()
-themes.DefaultBorderWithPadding(box)
-
-// Apply default border without padding
-themes.DefaultBorderWithoutPadding(box)
-
-// Set panel title with styling
-themes.SetPanelTitle(box, "My Panel")
-
-// Access current theme
-theme := themes.CurrentTheme
-color := theme.FocusedBorderColor
-```
-
-### Boxed Components
-
-The `boxed` package provides utilities for wrapping tview primitives with boxes and borders.
-
-```go
-import (
-    "github.com/strongo/strongo-tui/pkg/components/boxed"
-    "github.com/rivo/tview"
-)
-
-// Wrap a primitive with default borders
-textView := tview.NewTextView()
-box := tview.NewBox()
-wrapped := boxed.WithDefaultBorders(textView, box)
-
-// Access the original primitive
-original := wrapped.GetPrimitive()
-
-// Access the box for customization
-theBox := wrapped.GetBox()
-```
-
-### Button with Shortcut
-
-Enhanced button component that displays keyboard shortcuts.
-
-```go
-import "github.com/strongo/strongo-tui/pkg/components/button"
-
-// Create button with shortcut
-saveButton := button.NewWithShortcut("Save", 's')
-// Displays as: "(s) Save"
-
-// Customize shortcut style
-saveButton.SetShortcutStyle(
-    tcell.StyleDefault.
-        Foreground(tcell.ColorYellow).
-        Background(tcell.ColorBlack),
-)
-```
-
-### Padded Box
-
-Create boxes with real layout padding (not just border padding).
-
-```go
-import "github.com/strongo/strongo-tui/pkg/components/padding"
-
-content := tview.NewTextView().SetText("Hello, World!")
-padded := padding.Box(
-    content,
-    "My Title",
-    1, // top padding
-    1, // bottom padding
-    2, // left padding
-    2, // right padding
-)
-```
-
-## Example Application
-
-```go
-package main
-
-import (
-    "github.com/rivo/tview"
-    "github.com/strongo/strongo-tui/pkg/colors"
-    "github.com/strongo/strongo-tui/pkg/components/button"
-    "github.com/strongo/strongo-tui/pkg/themes"
-)
-
-func main() {
-    app := tview.NewApplication()
-
-    // Create a text view with some content
-    textView := tview.NewTextView().
-        SetText(colors.Success("Welcome to strongo-tui!") + "\n\n" +
-            "This is a sample application demonstrating the components.")
-    
-    // Apply themed border
-    themes.SetPanelTitle(textView.Box, "Demo Application")
-
-    // Create buttons with shortcuts
-    okButton := button.NewWithShortcut("OK", 'o')
-    cancelButton := button.NewWithShortcut("Cancel", 'c')
-
-    // Create button bar
-    buttons := tview.NewFlex().
-        AddItem(okButton, 10, 0, true).
-        AddItem(nil, 2, 0, false).
-        AddItem(cancelButton, 14, 0, false)
-
-    // Main layout
-    flex := tview.NewFlex().
-        SetDirection(tview.FlexRow).
-        AddItem(textView, 0, 1, false).
-        AddItem(buttons, 3, 0, true)
-
-    if err := app.SetRoot(flex, true).Run(); err != nil {
-        panic(err)
-    }
+type projects struct {
+	grid    *grid.Model
+	loading bool
 }
+
+func newProjects() projects { return projects{loading: true} }
+
+func (p projects) Init() tea.Cmd { return loadProjects() }        // async: a Cmd
+
+func (p projects) Update(msg tea.Msg) (nav.Screen, tea.Cmd) {
+	switch msg := msg.(type) {
+	case tea.WindowSizeMsg:                                       // size from the shell
+		if p.grid != nil { p.grid.SetSize(msg.Width, msg.Height) }
+	case nav.ScreenFocusMsg:                                      // focus from the shell
+		if p.grid != nil { p.grid.SetFocused(msg.Focused) }
+	case projectsLoaded:                                          // the result of the Cmd
+		p.loading = false
+		p.grid = newProjectGrid(msg.rows)
+	case grid.RowActivatedMsg:                                    // a message from a component
+		return p, nav.Push(nav.Page{Title: title(msg.Row), Content: newProject(msg.Row)})
+	case tea.KeyPressMsg:
+		if p.grid != nil { _, cmd := p.grid.Update(msg); return p, cmd }
+	}
+	return p, nil
+}
+
+func (p projects) View() string { /* p.grid.View(w, focused) or "Loading..." */ }
+func (p projects) Title() string { return "Projects" }             // optional: border title
 ```
 
-## Dependencies
+Wire it up:
 
-- [github.com/rivo/tview](https://github.com/rivo/tview) v0.42.0 - Rich terminal UI library
-- [github.com/gdamore/tcell/v2](https://github.com/gdamore/tcell) v2.13.8 - Terminal handling
-- [github.com/alecthomas/chroma/v2](https://github.com/alecthomas/chroma) v2.23.1 - Syntax highlighting
+```go
+shell := nav.New(nav.Page{Title: "Home", Menu: newMenu(), Content: nav.Static("Welcome", "...")})
+if err := nav.Run(shell); err != nil { log.Fatal(err) }
+```
+
+A complete runnable application is in [`examples/demo`](examples/demo): a menu
+list, a grid of people loaded asynchronously, a drill-down page, a tree, a form
+and highlighted text.
+
+## The shell (`pkg/nav`)
+
+```
++--------------------------------------------------------------+
+| Home > Projects > Demo                             (l) Login |  header
++----------------+---------------------------------------------+
+| menu (30 cols) | content                                     |  body
++----------------+---------------------------------------------+
+| enter open  ctrl+q quit  f1 help                             |  actions bar
++--------------------------------------------------------------+
+```
+
+The shell draws the border of each panel, takes its title from a screen that
+implements `Titled`, and tells the screen the size of the area inside the border
+with a `tea.WindowSizeMsg`. The menu is hidden below 100 columns.
+
+**Pages** form a stack; their titles are the breadcrumbs. `Push`, `Pop`, `PopTo`,
+`Replace`, `Reset` change the stack; `SetPanels` swaps the screens of the current
+page; `SetBreadcrumbs` shows a custom trail; `SetFocus` moves focus; `Alert` and
+`ShowError` show a modal or an error; `SetActions` replaces the application's
+actions. A page with a nil `Menu` keeps the menu of the page below.
+
+**Optional interfaces** a screen may implement: `Titled`, `Borderless`,
+`widgets.Boundary` (should this arrow key leave the screen?), `widgets.Editor`
+(the screen is editing text), `KeyCapturer` (the screen claims a key the shell
+would take), and `ShortHelper` (bindings listed in the actions bar).
+
+**Focus** lives in four zones: breadcrumbs, login button, menu, content. Arrow keys
+move it when the focused screen is `AtEdge` in that direction: Up at the top goes
+to the breadcrumbs, Right from the menu to the content, Left from the content to
+the menu, Shift+Tab to the breadcrumbs, Right past the last crumb to the login
+button, Down from the header back where focus came from. The shell sends a screen
+`nav.ScreenFocusMsg{Focused}` when it gains or loses focus; forward it to your
+components' `Focus`/`Blur`. Screens that do not implement `Boundary` keep their
+arrow keys.
+
+**Keys**: `Ctrl+Q` always quits, `Ctrl+C` quits unless the focused screen claims
+it. `nav.WithActions(nav.Action{ID, Binding, Msg})` binds application-wide keys to
+messages; they are ignored while the focused screen is editing text. The shell
+reports `nav.LoginMsg` (header button) and `nav.HelpMsg` (F1).
+
+**Mouse** is on: clicks focus and activate, the wheel scrolls; a screen receives
+mouse messages with coordinates relative to its own top-left cell.
+
+## Components (`pkg/widgets`)
+
+| Component | Built on | Messages |
+|---|---|---|
+| `List`, `MenuItem` | `bubbles/list` | `ItemHighlightedMsg`, `ItemSelectedMsg` |
+| `Tree`, `TreeNode` | own (data-driven; `bubbles/tree` has no unselectable nodes, ID-keyed expansion or exact sizing) | `NodeHighlightedMsg`, `NodeSelectedMsg` |
+| `Form`, `Field`, `FormButton` | `bubbles/textinput` | `FieldChangedMsg`, `SubmitMsg`, `CancelMsg`, `ButtonPressedMsg` |
+| `TextPane` | `bubbles/viewport` | |
+| `Tabs` | own strip | `TabChangedMsg`, `TabCloseMsg` |
+| `Modal` | own | `ModalDoneMsg` |
+| `Breadcrumbs`, `Crumb` | own | `CrumbSelectedMsg` |
+| `Frame`, `Button`, `Split`, `Fit`, `Overlay`, `Center` | pure functions and values | |
+
+Every component has a `KeyMap` of `key.Binding`s, `ShortHelp`/`FullHelp`,
+`SetSize`, `Focus`/`Blur`/`Focused`, and an `AtEdge` query where navigation applies.
+The conventions are documented in `pkg/widgets/doc.go`.
+
+## The grid (`pkg/grid`)
+
+The result grid moved here from `strongo/aichat` so that every product can use it
+without depending on the chat surface. See `pkg/grid/doc.go`.
+
+## Testing
+
+Components are tested by driving `Update` with messages and asserting on the
+view and on the messages they emit:
+
+```go
+list, cmd := list.Update(uitest.Key("enter"))
+msgs := uitest.Msgs(cmd) // []tea.Msg{widgets.ItemSelectedMsg{ID: "menu", Index: 0, ...}}
+got := uitest.Plain(list.View())
+```
+
+Whole screens run under `navtest`, a thin harness over the Elm loop:
+
+```go
+h := navtest.New(t, nav.Page{Title: "Home", Menu: menu, Content: welcome})
+h.Press("down", "enter")             // keys, typing, clicks, wheel, resize
+h.RequireContains("Projects")
+h.Send(projectsLoaded{rows: rows})   // any message
+h.Advance(3 * time.Second)           // fake clock for alert timers
+```
+
+`nav.Run` starts the program through a seam (`runTeaProgram`), so no test touches a
+terminal.
 
 ## Development
 
-### Building
-
 ```bash
-go build ./...
+go build ./... && go vet ./... && go test ./...
+go run ./examples/demo
 ```
 
-### Testing
-
-```bash
-go test ./...
-```
-
-### Running Examples
-
-```bash
-cd examples/demo
-go run main.go
-```
-
-## Origin
-
-This library extracts and consolidates common terminal UI code from:
-
-- [datatug/datatug-cli](https://github.com/datatug/datatug-cli) - CLI-first data exploration platform
-- [filetug/filetug](https://github.com/filetug/filetug) - Modern CLI file browser
-
-By extracting these components into a shared library, we make it easier to build consistent terminal UIs across multiple projects.
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+CI requires 100% statement coverage of every package.
 
 ## License
 
-Apache License 2.0 - See LICENSE file for details.
-
-## Related Projects
-
-- [datatug-cli](https://github.com/datatug/datatug-cli) - Cross-database data exploration tool
-- [filetug](https://github.com/filetug/filetug) - Modern terminal file browser
-- [tview](https://github.com/rivo/tview) - Rich terminal UI library for Go
+Apache License 2.0 - see [LICENSE](LICENSE).

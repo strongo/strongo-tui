@@ -4,7 +4,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/strongo/strongo-tui/pkg/widgets"
+	"github.com/tuigoff/tuigoff/pkg/widgets"
 )
 
 func TestSplit(t *testing.T) {

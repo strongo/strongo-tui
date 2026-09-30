@@ -1,6 +1,6 @@
-# Code graph of strongo/strongo-tui
+# Code graph of tuigoff/tuigoff
 
-Indexed by [codegrapher](https://codegrapher.dev) · [Browse online](https://codegrapher.dev/github.com/strongo/strongo-tui)
+Indexed by [codegrapher](https://codegrapher.dev) · [Browse online](https://codegrapher.dev/github.com/tuigoff/tuigoff)
 
 ## Contents
 

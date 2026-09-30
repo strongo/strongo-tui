@@ -3,7 +3,7 @@ package grid
 import (
 	"testing"
 
-	"github.com/strongo/strongo-tui/pkg/theme"
+	"github.com/tuigoff/tuigoff/pkg/theme"
 )
 
 // TestHighlightedRowMeetsContrastInEveryState covers the r10 coordinator

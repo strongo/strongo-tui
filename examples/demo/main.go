@@ -1,4 +1,4 @@
-// Command demo is a complete strongo-tui application in the Elm architecture: a
+// Command demo is a complete tuigoff application in the Elm architecture: a
 // menu list, a grid loaded asynchronously, a drill-down page, a tree, a form and
 // highlighted text, all inside the navigation shell.
 //
@@ -18,11 +18,11 @@ import (
 	"charm.land/bubbles/v2/key"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
-	"github.com/strongo/strongo-tui/pkg/grid"
-	"github.com/strongo/strongo-tui/pkg/highlight"
-	"github.com/strongo/strongo-tui/pkg/nav"
-	"github.com/strongo/strongo-tui/pkg/theme"
-	"github.com/strongo/strongo-tui/pkg/widgets"
+	"github.com/tuigoff/tuigoff/pkg/grid"
+	"github.com/tuigoff/tuigoff/pkg/highlight"
+	"github.com/tuigoff/tuigoff/pkg/nav"
+	"github.com/tuigoff/tuigoff/pkg/theme"
+	"github.com/tuigoff/tuigoff/pkg/widgets"
 )
 
 // run and exit are seams: tests replace them so no terminal is ever started.

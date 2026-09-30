@@ -3,7 +3,7 @@ package grid
 import (
 	tea "charm.land/bubbletea/v2"
 
-	"github.com/strongo/strongo-tui/pkg/widgets"
+	"github.com/tuigoff/tuigoff/pkg/widgets"
 )
 
 // Update handles a message and returns the receiver (the grid is a mutable

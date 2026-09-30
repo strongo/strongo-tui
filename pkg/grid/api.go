@@ -3,7 +3,7 @@ package grid
 import (
 	"charm.land/lipgloss/v2"
 
-	"github.com/strongo/strongo-tui/pkg/widgets"
+	"github.com/tuigoff/tuigoff/pkg/widgets"
 )
 
 // PinRowMsg is emitted by the "+" key for the highlighted row when that row

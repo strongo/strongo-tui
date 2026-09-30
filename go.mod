@@ -1,4 +1,4 @@
-module github.com/strongo/strongo-tui
+module github.com/tuigoff/tuigoff
 
 go 1.27.0
 

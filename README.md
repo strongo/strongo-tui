@@ -7,7 +7,7 @@ Terminal UIs in Go that feel good to use.
 > The name: **TUI** + **Go** + the Russian "-off" surname ending, as in Smirnoff. Mr. Tuigoff is a
 > gentleman who keeps your terminal tidy.
 
-Design rules live in [docs/design-language.md](docs/design-language.md); the original visual
+Components are listed in [docs/components](docs/components/README.md). Design rules live in [docs/design-language.md](docs/design-language.md); the original visual
 reference is [docs/design-language.html](docs/design-language.html).
 
 [![Go CI](https://github.com/tuigoff/tuigoff/actions/workflows/ci.yml/badge.svg)](https://github.com/tuigoff/tuigoff/actions/workflows/ci.yml)

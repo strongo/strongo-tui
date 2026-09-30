@@ -4,7 +4,7 @@ import (
 	"image/color"
 	"testing"
 
-	"github.com/strongo/strongo-tui/pkg/theme"
+	"github.com/tuigoff/tuigoff/pkg/theme"
 )
 
 func rgb(c color.Color) (r, g, b uint8) {

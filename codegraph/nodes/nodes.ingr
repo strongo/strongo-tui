@@ -1901,8 +1901,8 @@ null
 ""
 "import:235c667090c7bc397ee6a791c4ae23ec"
 "import"
-"github.com/strongo/strongo-tui/pkg/themes"
-"github.com/strongo/strongo-tui/pkg/themes"
+"github.com/tuigoff/tuigoff/pkg/themes"
+"github.com/tuigoff/tuigoff/pkg/themes"
 "pkg/components/boxed/with_box.go"
 "go"
 5
@@ -1910,7 +1910,7 @@ null
 1
 44
 ""
-"\"github.com/strongo/strongo-tui/pkg/themes\""
+"\"github.com/tuigoff/tuigoff/pkg/themes\""
 null
 false
 false
@@ -1941,8 +1941,8 @@ null
 ""
 "import:364ea422424eb1173a52175b535cd335"
 "import"
-"github.com/strongo/strongo-tui/pkg/themes"
-"github.com/strongo/strongo-tui/pkg/themes"
+"github.com/tuigoff/tuigoff/pkg/themes"
+"github.com/tuigoff/tuigoff/pkg/themes"
 "examples/demo/main.go"
 "go"
 10
@@ -1950,7 +1950,7 @@ null
 1
 44
 ""
-"\"github.com/strongo/strongo-tui/pkg/themes\""
+"\"github.com/tuigoff/tuigoff/pkg/themes\""
 null
 false
 false
@@ -2261,8 +2261,8 @@ null
 ""
 "import:7e5d85ffe1539bdd86cb5ae20f2df66c"
 "import"
-"github.com/strongo/strongo-tui/pkg/colors"
-"github.com/strongo/strongo-tui/pkg/colors"
+"github.com/tuigoff/tuigoff/pkg/colors"
+"github.com/tuigoff/tuigoff/pkg/colors"
 "examples/demo/main.go"
 "go"
 8
@@ -2270,7 +2270,7 @@ null
 1
 44
 ""
-"\"github.com/strongo/strongo-tui/pkg/colors\""
+"\"github.com/tuigoff/tuigoff/pkg/colors\""
 null
 false
 false
@@ -2321,8 +2321,8 @@ null
 ""
 "import:8f0d4eef9e48fed4a484a3ebeb54f18c"
 "import"
-"github.com/strongo/strongo-tui/pkg/colors"
-"github.com/strongo/strongo-tui/pkg/colors"
+"github.com/tuigoff/tuigoff/pkg/colors"
+"github.com/tuigoff/tuigoff/pkg/colors"
 "pkg/themes/default.go"
 "go"
 5
@@ -2330,7 +2330,7 @@ null
 1
 44
 ""
-"\"github.com/strongo/strongo-tui/pkg/colors\""
+"\"github.com/tuigoff/tuigoff/pkg/colors\""
 null
 false
 false
@@ -2381,8 +2381,8 @@ null
 ""
 "import:9960f86eea5b59cfe9612f6debe58eb9"
 "import"
-"github.com/strongo/strongo-tui/pkg/components/boxed"
-"github.com/strongo/strongo-tui/pkg/components/boxed"
+"github.com/tuigoff/tuigoff/pkg/components/boxed"
+"github.com/tuigoff/tuigoff/pkg/components/boxed"
 "pkg/components/padding/box.go"
 "go"
 5
@@ -2390,7 +2390,7 @@ null
 1
 54
 ""
-"\"github.com/strongo/strongo-tui/pkg/components/boxed\""
+"\"github.com/tuigoff/tuigoff/pkg/components/boxed\""
 null
 false
 false
@@ -2501,8 +2501,8 @@ null
 ""
 "import:c151bd4713f2b6c0138fc1eb1264f21b"
 "import"
-"github.com/strongo/strongo-tui/pkg/colors"
-"github.com/strongo/strongo-tui/pkg/colors"
+"github.com/tuigoff/tuigoff/pkg/colors"
+"github.com/tuigoff/tuigoff/pkg/colors"
 "pkg/themes/default_test.go"
 "go"
 7
@@ -2510,7 +2510,7 @@ null
 1
 44
 ""
-"\"github.com/strongo/strongo-tui/pkg/colors\""
+"\"github.com/tuigoff/tuigoff/pkg/colors\""
 null
 false
 false
@@ -2541,8 +2541,8 @@ null
 ""
 "import:cbce679ca04116f7aeed4beaf2973e64"
 "import"
-"github.com/strongo/strongo-tui/pkg/colors"
-"github.com/strongo/strongo-tui/pkg/colors"
+"github.com/tuigoff/tuigoff/pkg/colors"
+"github.com/tuigoff/tuigoff/pkg/colors"
 "pkg/colors/ansi_test.go"
 "go"
 6
@@ -2550,7 +2550,7 @@ null
 1
 44
 ""
-"\"github.com/strongo/strongo-tui/pkg/colors\""
+"\"github.com/tuigoff/tuigoff/pkg/colors\""
 null
 false
 false
@@ -2601,8 +2601,8 @@ null
 ""
 "import:d95687bd97f98c3f1eb2e9845fa13b82"
 "import"
-"github.com/strongo/strongo-tui/pkg/components/button"
-"github.com/strongo/strongo-tui/pkg/components/button"
+"github.com/tuigoff/tuigoff/pkg/components/button"
+"github.com/tuigoff/tuigoff/pkg/components/button"
 "examples/demo/main.go"
 "go"
 9
@@ -2610,7 +2610,7 @@ null
 1
 55
 ""
-"\"github.com/strongo/strongo-tui/pkg/components/button\""
+"\"github.com/tuigoff/tuigoff/pkg/components/button\""
 null
 false
 false

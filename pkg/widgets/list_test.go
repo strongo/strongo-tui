@@ -7,8 +7,8 @@ import (
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
 	"github.com/charmbracelet/x/ansi"
-	"github.com/strongo/strongo-tui/pkg/uitest"
-	"github.com/strongo/strongo-tui/pkg/widgets"
+	"github.com/tuigoff/tuigoff/pkg/uitest"
+	"github.com/tuigoff/tuigoff/pkg/widgets"
 )
 
 func newMenu() widgets.List {

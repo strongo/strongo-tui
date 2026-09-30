@@ -8,7 +8,7 @@ import (
 	"github.com/alecthomas/chroma/v2"
 	"github.com/alecthomas/chroma/v2/lexers"
 	"github.com/charmbracelet/x/ansi"
-	"github.com/strongo/strongo-tui/pkg/highlight"
+	"github.com/tuigoff/tuigoff/pkg/highlight"
 )
 
 const sample = "name: demo\nitems:\n  - one\n  - 2\n# comment\n"

@@ -7,7 +7,7 @@ import (
 
 	"github.com/charmbracelet/x/ansi"
 
-	"github.com/strongo/strongo-tui/pkg/uitest"
+	"github.com/tuigoff/tuigoff/pkg/uitest"
 )
 
 // countingSource is a synthetic RowSource that counts how often the grid

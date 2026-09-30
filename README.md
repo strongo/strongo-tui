@@ -1,7 +1,17 @@
-# strongo-tui
+# tuigoff
 
-[![Go CI](https://github.com/strongo/strongo-tui/actions/workflows/ci.yml/badge.svg)](https://github.com/strongo/strongo-tui/actions/workflows/ci.yml)
-[![Coverage Status](https://coveralls.io/repos/github/strongo/strongo-tui/badge.svg?branch=main)](https://coveralls.io/github/strongo/strongo-tui?branch=main)
+**Meet Mr. Tuigoff: the TUI Go Friendly Framework.**
+Terminal UIs in Go that feel good to use.
+*The house style behind DataTug, SpecScore, inGitDB, CodeGrapher, OVDB and Sneat.*
+
+> The name: **TUI** + **Go** + the Russian "-off" surname ending, as in Smirnoff. Mr. Tuigoff is a
+> gentleman who keeps your terminal tidy.
+
+Design rules live in [docs/design-language.md](docs/design-language.md); the original visual
+reference is [docs/design-language.html](docs/design-language.html).
+
+[![Go CI](https://github.com/tuigoff/tuigoff/actions/workflows/ci.yml/badge.svg)](https://github.com/tuigoff/tuigoff/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/tuigoff/tuigoff/badge.svg?branch=main)](https://coveralls.io/github/tuigoff/tuigoff?branch=main)
 
 The shared terminal UI toolkit of Sneat, DataTug and FileTug, built on
 [Bubble Tea v2](https://charm.land/bubbletea), [Bubbles](https://charm.land/bubbles)
@@ -36,7 +46,7 @@ We build with our own tooling:
 ## Installation
 
 ```bash
-go get github.com/strongo/strongo-tui
+go get github.com/tuigoff/tuigoff
 ```
 
 ## The architecture in five rules

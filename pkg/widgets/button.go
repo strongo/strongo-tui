@@ -6,7 +6,7 @@ import (
 
 	"charm.land/lipgloss/v2"
 	"github.com/charmbracelet/x/ansi"
-	"github.com/strongo/strongo-tui/pkg/theme"
+	"github.com/tuigoff/tuigoff/pkg/theme"
 )
 
 // Button is the look of a push button: a label with an optional shortcut hint in

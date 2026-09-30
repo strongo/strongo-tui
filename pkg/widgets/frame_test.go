@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/strongo/strongo-tui/pkg/uitest"
-	"github.com/strongo/strongo-tui/pkg/widgets"
+	"github.com/tuigoff/tuigoff/pkg/uitest"
+	"github.com/tuigoff/tuigoff/pkg/widgets"
 )
 
 func TestFrameDrawsBorderTitleAndPadding(t *testing.T) {

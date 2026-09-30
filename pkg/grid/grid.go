@@ -17,7 +17,7 @@ import (
 	"github.com/charmbracelet/x/ansi"
 	"github.com/evertras/bubble-table/table"
 
-	"github.com/strongo/strongo-tui/pkg/theme"
+	"github.com/tuigoff/tuigoff/pkg/theme"
 )
 
 // sourceKey is a hidden bubble-table RowData key (it matches no column, so it

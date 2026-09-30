@@ -2,11 +2,11 @@
 // terminal applications: colours, card framing, and chrome (bars, composer
 // frame, panel rows) that every product renders through, so all of them look
 // and behave alike with no styling code of their own. The chat surface of
-// strongo/aichat and the navigation shell and widgets of strongo-tui draw
+// strongo/aichat and the navigation shell and widgets of tuigoff draw
 // exclusively with it.
 //
 // The package was born in strongo/aichat as tui/theme and moved here so that
-// aichat depends on strongo-tui and not the other way round.
+// aichat depends on tuigoff and not the other way round.
 //
 // Founder ruling (2026-09-25): "UI styling should be unified across apps.
 // Message should be like a card in chat of any app." and (same day,

@@ -1,4 +1,4 @@
-// Package widgets is the component kit of strongo-tui. Its components follow
+// Package widgets is the component kit of tuigoff. Its components follow
 // the Elm architecture of Bubble Tea: a component is a model with
 // Update(tea.Msg) (T, tea.Cmd) and View() string, its state lives in the model,
 // and what happens in it is reported to the parent as messages.

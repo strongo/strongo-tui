@@ -9,7 +9,7 @@ import (
 
 // Screen is what the menu and content panels host. It is shaped like a
 // tea.Model whose View returns a string, so the components of
-// charm.land/bubbles and strongo-tui compose into screens the usual way.
+// charm.land/bubbles and tuigoff compose into screens the usual way.
 type Screen interface {
 	// Init returns the command to run when the screen is mounted.
 	Init() tea.Cmd

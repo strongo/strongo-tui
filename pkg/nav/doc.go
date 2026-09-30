@@ -1,4 +1,4 @@
-// Package nav is the navigation shell of strongo-tui: one Bubble Tea model that
+// Package nav is the navigation shell of tuigoff: one Bubble Tea model that
 // lays out a header with breadcrumbs, a menu panel, a content panel and an
 // actions bar, routes keys, mouse events and messages to the screens it hosts,
 // keeps a stack of pages, and shows alerts.

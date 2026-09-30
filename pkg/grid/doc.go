@@ -14,8 +14,8 @@
 // table_style.go). DataTug and Sneat Chat use this one grid for
 // tabular/contact data — not two competing ones; DataTug's gridState is a
 // thin wrapper embedding a *grid.Model. The grid moved here from
-// strongo/aichat tui/grid so that any strongo-tui product can use it
-// (dependency direction: aichat imports strongo-tui, never the reverse);
+// strongo/aichat tui/grid so that any tuigoff product can use it
+// (dependency direction: aichat imports tuigoff, never the reverse);
 // aichat keeps a thin transcript adapter that turns Row.Ref into its own
 // entity reference and PinRowMsg into its sidebar message.
 //

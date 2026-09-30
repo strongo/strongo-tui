@@ -3,7 +3,7 @@ package theme_test
 import (
 	"testing"
 
-	"github.com/strongo/strongo-tui/pkg/theme"
+	"github.com/tuigoff/tuigoff/pkg/theme"
 )
 
 const (

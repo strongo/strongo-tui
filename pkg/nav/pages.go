@@ -2,7 +2,7 @@ package nav
 
 import (
 	tea "charm.land/bubbletea/v2"
-	"github.com/strongo/strongo-tui/pkg/widgets"
+	"github.com/tuigoff/tuigoff/pkg/widgets"
 )
 
 // windowSize is the message that tells a screen its size.
